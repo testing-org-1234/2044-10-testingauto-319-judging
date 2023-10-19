@@ -118,6 +118,7 @@ def process_directory(repo, path):
             files = list(repo.get_contents(item.path))
             dirs = [x for x in files if x.type == 'dir']
             files = [x for x in files if x.type != 'dir' and x.name not in [".gitkeep"]]
+            print("Files", files)
             for dir in dirs:
                 process_directory(repo, dir.path)
             try:
