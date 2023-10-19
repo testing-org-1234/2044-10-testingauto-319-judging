@@ -154,6 +154,7 @@ def process_directory(repo, path):
             # 2. The family is an invalid family (deduplicated inside the invalid folder) and no report is selected.
             #    We select the last processed issue in that family as the report.
             if len(files) == 1 or (severity == "false" and not parent):
+                print(f"Setting issue {issue_id} as parent, as none was selected before")
                 parent = issue_id
 
             body = file.decoded_content.decode("utf-8")
@@ -186,6 +187,7 @@ def process_directory(repo, path):
         if parent:
             for issue_id in dir_issues_ids:
                 if issue_id != parent:
+                    print(f"Setting issue {parent} as parent of {issue_id}")
                     issues[parent]["has_duplicates"] = True
                     issues[issue_id]["parent"] = parent
                     issues[issue_id]["closed"] = True
