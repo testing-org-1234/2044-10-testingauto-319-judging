@@ -14,7 +14,7 @@ from github.GithubException import (
 token = os.environ.get("GITHUB_TOKEN")
 github = Github(token)
 
-exception_filenames = [".data", ".git", ".github", "README.md", "Audit_Report.pdf", "comments.csv"]
+exception_filenames = [".data", ".git", ".github", "README.md", "Audit_Report.pdf", "comments.csv", ".gitkeep"]
 
 def github_retry_on_rate_limit(func):
     @wraps(func)
@@ -104,6 +104,15 @@ def process_directory(repo, path):
         for x in repo.get_contents(path)
         if x.name not in exception_filenames
     ]
+
+    dirs = [x for x in repo_items if x.type == 'dir']
+    files = [x for x in repo_items if x.type != 'dir']
+
+    # Process any directories inside
+    for dir in dirs:
+        print(f"Dir {dir.path}")
+        # process_directory(repo, dir.path)
+    
     for item in repo_items:
         print("Reading file %s" % item.name)
 
@@ -117,7 +126,7 @@ def process_directory(repo, path):
             # If it's a directory, we have some duplicate issues
             files = list(repo.get_contents(item.path))
             dirs = [x for x in files if x.type == 'dir']
-            files = [x for x in files if x.type != 'dir' and x.name not in [".gitkeep"]]
+            files = [x for x in files if x.type != 'dir' and x.name not in exception_filenames]
             print("Files", files)
             for dir in dirs:
                 process_directory(repo, dir.path)
