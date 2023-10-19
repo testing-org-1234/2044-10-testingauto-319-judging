@@ -148,7 +148,12 @@ def process_directory(repo, path):
             else:
                 issue_id = int(file.name.replace(".md", ""))
 
-            if len(files) == 1:
+            # We automatically set the parent in the following cases:
+            # 1. The family has only one issue and no report has been selected.
+            #    We select the only issue available as the report.
+            # 2. The family is an invalid family (deduplicated inside the invalid folder) and no report is selected.
+            #    We select the last processed issue in that family as the report.
+            if len(files) == 1 or (severity == "false" and not parent):
                 parent = issue_id
 
             body = file.decoded_content.decode("utf-8")
