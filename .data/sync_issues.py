@@ -111,7 +111,7 @@ def process_directory(repo, path):
     # Process any directories inside
     for dir in dirs:
         print(f"Dir {dir.path}")
-        # process_directory(repo, dir.path)
+        process_directory(repo, dir.path)
     
     for item in repo_items:
         print("Reading file %s" % item.name)
