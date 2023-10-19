@@ -176,6 +176,7 @@ def process_directory(repo, path):
                 "title": title,
                 "has_duplicates": False,
             }
+            print(f"Saving issue {issue_id} in dir_issues_ids")
             dir_issues_ids.append(issue_id)
 
         # Set the parent field for all duplicates in this directory
@@ -185,7 +186,9 @@ def process_directory(repo, path):
             )
 
         if parent:
+            print(f"Processing parent {parent}")
             for issue_id in dir_issues_ids:
+                print(f"Processing issue {issue_id}")
                 if issue_id != parent:
                     print(f"Setting issue {parent} as parent of {issue_id}")
                     issues[parent]["has_duplicates"] = True
