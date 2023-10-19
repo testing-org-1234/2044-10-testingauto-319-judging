@@ -115,10 +115,6 @@ def process_directory(repo, path):
     dirs = [x for x in path_items if x.type == 'dir']
     files = [x for x in path_items if x.type != 'dir']
 
-    # Process any directories inside
-    for directory in dirs:
-        process_directory(repo, directory.path)
-
     # Root issues are closed by default
     closed = True if path == "" else any(x in path.lower()
                                          for x in ["low", "false", "invalid"])
@@ -161,9 +157,9 @@ def process_directory(repo, path):
         #    We select the only issue available as the report.
         # 2. The family is an invalid family (deduplicated inside the invalid folder) and no report is selected.
         #    We select the last processed issue in that family as the report.
-        if len(files) == 1 or (severity == "false" and not parent and path not in ["low", "false", "invalid"] and last_file):
+        if not parent and (len(files) == 1 or (severity == "false" and path not in ["low", "false", "invalid"] and last_file)):
             print(
-                f"[!] Setting issue {issue_id} as parent of the current family /{path}")
+                f"[!] Setting issue {issue_id} as default parent of the current family /{path}")
             parent = issue_id
 
         body = file.decoded_content.decode("utf-8")
@@ -200,6 +196,10 @@ def process_directory(repo, path):
                     issues[parent]["has_duplicates"] = True
                     issues[issue_id]["parent"] = parent
                     issues[issue_id]["closed"] = True
+
+    # Process any directories inside
+    for directory in dirs:
+        process_directory(repo, directory.path)
 
 
 @lru_cache(maxsize=1024)
