@@ -105,7 +105,7 @@ issues = {}
 def process_directory(repo, path):
     global issues
 
-    print(f"[/] Processing directory {path}")
+    print(f"[/] Processing directory /{path}")
 
     path_items = [
         x
@@ -117,12 +117,11 @@ def process_directory(repo, path):
 
     # Process any directories inside
     for directory in dirs:
-        print(f"Dir {directory.path}")
         process_directory(repo, directory.path)
 
     # Root issues are closed by default
-    closed = True if path == "/" else any(x in path.lower()
-                                          for x in ["low", "false", "invalid"])
+    closed = True if path == "" else any(x in path.lower()
+                                         for x in ["low", "false", "invalid"])
     severity = "false"
 
     if not closed:
@@ -161,7 +160,7 @@ def process_directory(repo, path):
         #    We select the only issue available as the report.
         # 2. The family is an invalid family (deduplicated inside the invalid folder) and no report is selected.
         #    We select the last processed issue in that family as the report.
-        if len(files) == 1 or (severity == "false" and not parent):
+        if len(files) == 1 or (severity == "false" and not parent and path not in ["low", "false", "invalid"]):
             print(
                 f"Setting issue {issue_id} as parent, as none was selected before")
             parent = issue_id
