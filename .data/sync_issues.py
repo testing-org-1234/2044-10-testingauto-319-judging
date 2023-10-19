@@ -105,7 +105,7 @@ issues = {}
 def process_directory(repo, path):
     global issues
 
-    print(f"[/] Processing directory /{path}")
+    print(f"[+] Processing directory /{path}")
 
     path_items = [
         x
@@ -146,7 +146,7 @@ def process_directory(repo, path):
     dir_issues_ids = []
     parent = None
     for index, file in enumerate(files):
-        print(f"[+] Reading file {file.name}")
+        print(f"[-] Reading file {file.name}")
         last_file = index == len(files) - 1
 
         file = ContentFileExtended.cast(file)
@@ -186,7 +186,6 @@ def process_directory(repo, path):
             "title": title,
             "has_duplicates": False,
         }
-        print(f"Saving issue {issue_id} in dir_issues_ids")
         dir_issues_ids.append(issue_id)
 
         # Set the parent field for all duplicates in this directory
@@ -198,7 +197,6 @@ def process_directory(repo, path):
         if parent:
             for issue_id in dir_issues_ids:
                 if issue_id != parent:
-                    print(f"[-] Setting issue {parent} as parent of {issue_id}")
                     issues[parent]["has_duplicates"] = True
                     issues[issue_id]["parent"] = parent
                     issues[issue_id]["closed"] = True
