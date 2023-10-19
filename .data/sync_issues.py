@@ -159,7 +159,7 @@ def process_directory(repo, path):
         #    We select the last processed issue in that family as the report.
         if not parent and (len(files) == 1 or (severity == "false" and path not in ["low", "false", "invalid"] and last_file)):
             print(
-                f"[!] Setting issue {issue_id} as default parent of the current family /{path}")
+                f"[!] Setting issue {issue_id} as the default parent of the current family /{path}")
             parent = issue_id
 
         body = file.decoded_content.decode("utf-8")
